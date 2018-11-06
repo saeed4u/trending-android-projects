@@ -1,6 +1,24 @@
 package xapo.saeed.xapo_test.ui.fragment;
 
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import org.jetbrains.annotations.NotNull;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import xapo.saeed.xapo_test.R;
+import xapo.saeed.xapo_test.adapter.GitHubRepoAdapter;
 import xapo.saeed.xapo_test.api.response.GitHubRepoResponse;
+import xapo.saeed.xapo_test.model.Model;
+import xapo.saeed.xapo_test.model.GitHubRepoModel;
+import xapo.saeed.xapo_test.presenter.GitHubRepoPresenter;
+import xapo.saeed.xapo_test.presenter.Presenter;
 import xapo.saeed.xapo_test.ui.MainView;
 
 /**
@@ -8,25 +26,70 @@ import xapo.saeed.xapo_test.ui.MainView;
  */
 public class GitHubRepoListFragment extends BaseFragment implements MainView {
 
+    private static final String SORT_BY = "stars";
+    private static final String ORDER_BY = "desc";
+    private static final int PER_PAGE = 10;
+
+    @BindView(R.id.android_repos)
+    RecyclerView android_repos;
+
+    private GitHubRepoResponse repoResponse;
+    private GitHubRepoAdapter repoAdapter;
+    private Presenter presenter;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Model model = new GitHubRepoModel();
+        presenter = new GitHubRepoPresenter(model, this);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = LayoutInflater.from(activity).inflate(R.layout.list_fragment, container, false);
+        ButterKnife.bind(this, view);
+        // TODO: 06/11/2018 restore state, if any exist
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (repoResponse != null) {
+            repoAdapter = new GitHubRepoAdapter(repoResponse.getItems());
+            android_repos.setAdapter(repoAdapter);
+        } else {
+            presenter.getRepo(SORT_BY, ORDER_BY, PER_PAGE);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // TODO: 06/11/2018 Save current state
+    }
 
 
     @Override
     public void onError(Throwable throwable) {
-
+        handleError(throwable);
     }
 
     @Override
-    public void onSuccess(GitHubRepoResponse repoResponse) {
-
+    public void onSuccess(@NotNull GitHubRepoResponse repoResponse) {
+        this.repoResponse = repoResponse;
+        repoAdapter = new GitHubRepoAdapter(this.repoResponse.getItems());
+        android_repos.setAdapter(repoAdapter);
     }
 
     @Override
     public void showProgressDialog() {
-
+        showLoader(R.string.please_wait);
     }
 
     @Override
     public void hideProgressDialog() {
-
+        dismissDialog();
     }
 }

@@ -8,7 +8,7 @@ import xapo.saeed.xapo_test.api.response.GitHubRepoResponse;
  */
 public interface Presenter {
 
-    void getRepo(@NonNull String sort, String orderBy, String perPage);
+    void getRepo(@NonNull String sort, String orderBy, int perPage);
 
     void onError(Throwable throwable);
 

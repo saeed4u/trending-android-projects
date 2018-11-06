@@ -1,5 +1,6 @@
 package xapo.saeed.xapo_test.ui;
 
+import androidx.annotation.NonNull;
 import xapo.saeed.xapo_test.api.response.GitHubRepoResponse;
 
 /**
@@ -9,7 +10,7 @@ public interface MainView {
 
     void onError(Throwable throwable);
 
-    void onSuccess(GitHubRepoResponse repoResponse);
+    void onSuccess(@NonNull GitHubRepoResponse repoResponse);
 
     void showProgressDialog();
 

@@ -63,4 +63,5 @@ public class GitHubRepoAdapter extends RecyclerView.Adapter<GitHubRepoViewHolder
             lastPosition = position;
         }
     }
+
 }

@@ -2,7 +2,7 @@ package xapo.saeed.xapo_test.presenter;
 
 import androidx.annotation.NonNull;
 import xapo.saeed.xapo_test.api.response.GitHubRepoResponse;
-import xapo.saeed.xapo_test.model.GitHubRepoModel;
+import xapo.saeed.xapo_test.model.Model;
 import xapo.saeed.xapo_test.ui.MainView;
 
 /**
@@ -10,10 +10,10 @@ import xapo.saeed.xapo_test.ui.MainView;
  */
 public class GitHubRepoPresenter implements Presenter {
 
-    private GitHubRepoModel model;
+    private Model model;
     private MainView view;
 
-    public GitHubRepoPresenter(@NonNull GitHubRepoModel model, @NonNull MainView view) {
+    public GitHubRepoPresenter(@NonNull Model model, @NonNull MainView view) {
         this.model = model;
         this.view = view;
     }
