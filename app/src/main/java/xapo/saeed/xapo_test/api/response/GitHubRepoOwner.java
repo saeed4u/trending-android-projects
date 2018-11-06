@@ -1,9 +1,12 @@
 package xapo.saeed.xapo_test.api.response;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created on 06/11/2018.
  */
-public class GitHubRepoOwner {
+public class GitHubRepoOwner implements Parcelable {
 
     private String avatar_url;
     private String url;
@@ -13,6 +16,28 @@ public class GitHubRepoOwner {
     private String type;
     private String login;
 
+
+    protected GitHubRepoOwner(Parcel in) {
+        avatar_url = in.readString();
+        url = in.readString();
+        html_url = in.readString();
+        followers_url = in.readString();
+        repos_url = in.readString();
+        type = in.readString();
+        login = in.readString();
+    }
+
+    public static final Creator<GitHubRepoOwner> CREATOR = new Creator<GitHubRepoOwner>() {
+        @Override
+        public GitHubRepoOwner createFromParcel(Parcel in) {
+            return new GitHubRepoOwner(in);
+        }
+
+        @Override
+        public GitHubRepoOwner[] newArray(int size) {
+            return new GitHubRepoOwner[size];
+        }
+    };
 
     public String getAvatar_url() {
         return avatar_url;
@@ -68,5 +93,21 @@ public class GitHubRepoOwner {
 
     public void setLogin(String login) {
         this.login = login;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(avatar_url);
+        dest.writeString(url);
+        dest.writeString(html_url);
+        dest.writeString(followers_url);
+        dest.writeString(repos_url);
+        dest.writeString(type);
+        dest.writeString(login);
     }
 }

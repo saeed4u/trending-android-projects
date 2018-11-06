@@ -16,10 +16,11 @@ public class GitHubRepoPresenter implements Presenter {
     public GitHubRepoPresenter(@NonNull Model model, @NonNull MainView view) {
         this.model = model;
         this.view = view;
+        this.model.setPresenter(this);
     }
 
     @Override
-    public void getRepo(@NonNull String sort, String orderBy, String perPage) {
+    public void getRepo(@NonNull String sort, String orderBy, int perPage) {
         view.showProgressDialog();
         model.getAndroidRepo(sort, orderBy, perPage);
     }

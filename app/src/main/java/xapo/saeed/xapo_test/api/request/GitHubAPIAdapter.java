@@ -14,7 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class GitHubAPIAdapter {
 
-    private static final String BASE_URL = "";
+    private static final String BASE_URL = "https://api.github.com/";
 
     public static GitHubAPI createGitHubAPIAdapter() {
 

@@ -1,9 +1,12 @@
 package xapo.saeed.xapo_test.api.response;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created on 06/11/2018.
  */
-public class GitHubRepo {
+public class GitHubRepo implements Parcelable {
 
     private long id;
     private String node_id;
@@ -20,6 +23,35 @@ public class GitHubRepo {
 
     private GitHubRepoOwner owner;
     private GitHubRepoLicense license;
+
+    protected GitHubRepo(Parcel in) {
+        id = in.readLong();
+        node_id = in.readString();
+        name = in.readString();
+        full_name = in.readString();
+        description = in.readString();
+        contributors_url = in.readString();
+        created_at = in.readString();
+        updated_at = in.readString();
+        homepage = in.readString();
+        language = in.readString();
+        open_issues = in.readInt();
+        score = in.readFloat();
+        owner = in.readParcelable(GitHubRepoOwner.class.getClassLoader());
+        license = in.readParcelable(GitHubRepoLicense.class.getClassLoader());
+    }
+
+    public static final Creator<GitHubRepo> CREATOR = new Creator<GitHubRepo>() {
+        @Override
+        public GitHubRepo createFromParcel(Parcel in) {
+            return new GitHubRepo(in);
+        }
+
+        @Override
+        public GitHubRepo[] newArray(int size) {
+            return new GitHubRepo[size];
+        }
+    };
 
     public long getId() {
         return id;
@@ -131,5 +163,28 @@ public class GitHubRepo {
 
     public void setLicense(GitHubRepoLicense license) {
         this.license = license;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(node_id);
+        dest.writeString(name);
+        dest.writeString(full_name);
+        dest.writeString(description);
+        dest.writeString(contributors_url);
+        dest.writeString(created_at);
+        dest.writeString(updated_at);
+        dest.writeString(homepage);
+        dest.writeString(language);
+        dest.writeInt(open_issues);
+        dest.writeFloat(score);
+        dest.writeParcelable(owner, flags);
+        dest.writeParcelable(license, flags);
     }
 }

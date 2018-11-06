@@ -3,6 +3,6 @@
     <string name="ok">OK</string>
     <string name="error">Error</string>
     <string name="oops_error_occurred">Sorry we are not able to process your request now, please try again.</string>
-    <string name="please_wait">A moment please …</string>
+    <string name="a_moment_please">A moment please …</string>
     <string name="treanding_android_repos">Trending Android Repos</string>
 </resources>

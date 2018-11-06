@@ -29,6 +29,7 @@ public class GitHubRepoListFragment extends BaseFragment implements MainView {
     private static final String SORT_BY = "stars";
     private static final String ORDER_BY = "desc";
     private static final int PER_PAGE = 10;
+    private static final String FETCHED_REPOS = "fetched_repos";
 
     @BindView(R.id.android_repos)
     RecyclerView android_repos;
@@ -47,9 +48,11 @@ public class GitHubRepoListFragment extends BaseFragment implements MainView {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = LayoutInflater.from(activity).inflate(R.layout.list_fragment, container, false);
+        View view = inflater.inflate(R.layout.list_fragment, container, false);
         ButterKnife.bind(this, view);
-        // TODO: 06/11/2018 restore state, if any exist
+        if (savedInstanceState!=null){
+            repoResponse = savedInstanceState.getParcelable(FETCHED_REPOS);
+        }
         return view;
     }
 
@@ -67,7 +70,9 @@ public class GitHubRepoListFragment extends BaseFragment implements MainView {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        // TODO: 06/11/2018 Save current state
+        if (repoResponse != null) {
+            outState.putParcelable(FETCHED_REPOS, repoResponse);
+        }
     }
 
 
@@ -85,7 +90,7 @@ public class GitHubRepoListFragment extends BaseFragment implements MainView {
 
     @Override
     public void showProgressDialog() {
-        showLoader(R.string.please_wait);
+        showLoader(R.string.a_moment_please);
     }
 
     @Override
