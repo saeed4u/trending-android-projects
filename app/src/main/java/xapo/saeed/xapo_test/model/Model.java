@@ -9,6 +9,6 @@ public interface Model {
 
     String ANDROID_QUERY_STRING = "android language:java";
 
-    void getAndroidRepo(@NonNull String sortBy, String orderBy, int perPage);
+    void getAndroidRepo(@NonNull String sortBy, String orderBy, int perPage,int page);
 
 }

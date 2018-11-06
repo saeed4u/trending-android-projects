@@ -9,6 +9,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
+import io.reactivex.processors.PublishProcessor;
 import xapo.saeed.xapo_test.R;
 import xapo.saeed.xapo_test.api.request.GitHubAPI;
 import xapo.saeed.xapo_test.api.request.GitHubAPIAdapter;
@@ -24,6 +25,7 @@ public class GitHubRepoModel implements Model {
 
     private Presenter presenter;
     private Context context;
+    private PublishProcessor<Integer> paginator = PublishProcessor.create();
 
     public GitHubRepoModel(@NonNull Presenter presenter, @NonNull Context context) {
         this.presenter = presenter;
@@ -31,7 +33,7 @@ public class GitHubRepoModel implements Model {
     }
 
     @Override
-    public void getAndroidRepo(@NonNull final String sort, String orderBy, int perPage) {
+    public void getAndroidRepo(@NonNull final String sort, String orderBy, int perPage, int page) {
         if (TextUtils.isEmpty(orderBy)) {
             orderBy = "desc";
         }
@@ -39,8 +41,12 @@ public class GitHubRepoModel implements Model {
         if (perPage == 0) {
             perPage = 10;
         }
+        if (page == 0){
+            page = 1;
+        }
         final String finalOrderBy = orderBy;
         final int finalPerPage = perPage;
+        final int finalPage = page;
         NetworkUtils.networkAvailable(context)
                 .flatMap(new Function<Boolean, ObservableSource<GitHubRepoResponse>>() {
                     @Override
@@ -49,7 +55,7 @@ public class GitHubRepoModel implements Model {
                             throw new NetworkNotAvailableException(context.getString(R.string.error_no_internet));
                         }
                         GitHubAPI api = GitHubAPIAdapter.createGitHubAPIAdapter();
-                        return api.getTrendingRepos(ANDROID_QUERY_STRING, sort, finalOrderBy, finalPerPage);
+                        return api.getTrendingRepos(ANDROID_QUERY_STRING, sort, finalOrderBy, finalPerPage, finalPage);
                     }
                 }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<GitHubRepoResponse>() {
             @Override

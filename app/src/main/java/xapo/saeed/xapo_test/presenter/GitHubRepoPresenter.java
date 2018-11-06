@@ -22,9 +22,9 @@ public class GitHubRepoPresenter implements Presenter {
     }
 
     @Override
-    public void getRepo(@NonNull String sort, String orderBy, int perPage) {
+    public void getRepo(@NonNull String sort, String orderBy, int perPage, int page) {
         view.showProgressDialog();
-        model.getAndroidRepo(sort, orderBy, perPage);
+        model.getAndroidRepo(sort, orderBy, perPage, page);
     }
 
     @Override
@@ -36,10 +36,6 @@ public class GitHubRepoPresenter implements Presenter {
     @Override
     public void success(@NonNull GitHubRepoResponse response) {
         view.hideProgressDialog();
-        Log.v("Called", "Size = " + response.getItems().size());
-        if (view == null) {
-            Log.v("Well", "Well");
-        }
         view.onSuccess(response);
     }
 }

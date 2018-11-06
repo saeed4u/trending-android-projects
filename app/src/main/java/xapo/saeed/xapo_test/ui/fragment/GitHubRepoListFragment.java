@@ -30,6 +30,7 @@ public class GitHubRepoListFragment extends BaseFragment implements MainView {
     private static final String ORDER_BY = "desc";
     private static final int PER_PAGE = 10;
     private static final String FETCHED_REPOS = "fetched_repos";
+    private static int PAGE = 1;
 
     @BindView(R.id.android_repos)
     RecyclerView android_repos;
@@ -62,7 +63,7 @@ public class GitHubRepoListFragment extends BaseFragment implements MainView {
             repoAdapter = new GitHubRepoAdapter(repoResponse.getItems());
             android_repos.setAdapter(repoAdapter);
         } else {
-            presenter.getRepo(SORT_BY, ORDER_BY, PER_PAGE);
+            presenter.getRepo(SORT_BY, ORDER_BY, PER_PAGE, PAGE);
         }
     }
 
@@ -84,10 +85,7 @@ public class GitHubRepoListFragment extends BaseFragment implements MainView {
     public void onSuccess(@NotNull GitHubRepoResponse repoResponse) {
         this.repoResponse = repoResponse;
         repoAdapter = new GitHubRepoAdapter(this.repoResponse.getItems());
-        Log.v("Called", "repoResponse = ");
         android_repos.setAdapter(repoAdapter);
-        if (android_repos == null){
-        }
     }
 
     @Override
