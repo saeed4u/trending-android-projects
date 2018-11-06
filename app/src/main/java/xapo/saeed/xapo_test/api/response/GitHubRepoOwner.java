@@ -1,4 +1,4 @@
-package xapo.saeed.xapo_test.model;
+package xapo.saeed.xapo_test.api.response;
 
 /**
  * Created on 06/11/2018.
@@ -11,6 +11,8 @@ public class GitHubRepoOwner {
     private String followers_url;
     private String repos_url;
     private String type;
+    private String login;
+
 
     public String getAvatar_url() {
         return avatar_url;
@@ -58,5 +60,13 @@ public class GitHubRepoOwner {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
     }
 }

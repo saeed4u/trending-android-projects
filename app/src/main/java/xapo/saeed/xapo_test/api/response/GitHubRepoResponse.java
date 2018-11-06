@@ -2,8 +2,6 @@ package xapo.saeed.xapo_test.api.response;
 
 import java.util.List;
 
-import xapo.saeed.xapo_test.model.GitHubRepo;
-
 /**
  * Created on 06/11/2018.
  */

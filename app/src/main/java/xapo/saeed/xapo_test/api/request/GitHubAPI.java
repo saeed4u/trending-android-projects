@@ -13,6 +13,7 @@ public interface GitHubAPI {
 
     //Search API
     @GET("search/repositories")
-    Observable<GitHubRepoResponse> getTrendingRepos(@Query("q") String query, @Query("sort") String sortBy, @Query("order") String orderBy, @Query("per_page") String perPage);
+    Observable<GitHubRepoResponse> getTrendingRepos(@Query("q") String query, @Query("sort") String sortBy,
+                                                    @Query("order") String orderBy, @Query("per_page") String perPage);
 
 }

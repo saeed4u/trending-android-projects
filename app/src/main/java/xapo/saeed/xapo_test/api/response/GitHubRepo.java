@@ -1,4 +1,4 @@
-package xapo.saeed.xapo_test.model;
+package xapo.saeed.xapo_test.api.response;
 
 /**
  * Created on 06/11/2018.
