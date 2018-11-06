@@ -10,13 +10,14 @@ import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import xapo.saeed.xapo_test.R;
 import xapo.saeed.xapo_test.ui.MainActivity;
+import xapo.saeed.xapo_test.util.NetworkNotAvailableException;
 
 /**
  * Created on 06/11/2018.
  */
 public abstract class BaseFragment extends Fragment {
 
-    protected MainActivity activity;
+    MainActivity activity;
 
     private MaterialDialog materialDialog;
 
@@ -27,10 +28,12 @@ public abstract class BaseFragment extends Fragment {
     }
 
 
-    public void handleError(Throwable throwable) {
+    void handleError(Throwable throwable) {
         if (throwable instanceof HttpException) {
             HttpException httpException = (HttpException) throwable;
             showDialogMessage(R.string.error, httpException.message());
+        } else if (throwable instanceof NetworkNotAvailableException) {
+            showDialogMessage(R.string.no_internet, throwable.getMessage());
         } else {
             showErrorDialog();
         }
@@ -52,7 +55,7 @@ public abstract class BaseFragment extends Fragment {
 
     private void showErrorDialog() {
         materialDialog = new MaterialDialog.Builder(activity)
-                .title(R.string.app_name)
+                .title(R.string.error)
                 .iconRes(R.mipmap.ic_launcher)
                 .theme(Theme.DARK)
                 .backgroundColorRes(R.color.colorPrimaryDark)

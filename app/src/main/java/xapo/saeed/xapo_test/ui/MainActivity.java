@@ -49,4 +49,13 @@ public class MainActivity extends AppCompatActivity {
                 .addToBackStack(GitHubRepoListFragment.class.getSimpleName())
                 .commit();
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        FragmentManager manager = getSupportFragmentManager();
+        if (manager.getBackStackEntryCount() == 0) {
+            finish();
+        }
+    }
 }

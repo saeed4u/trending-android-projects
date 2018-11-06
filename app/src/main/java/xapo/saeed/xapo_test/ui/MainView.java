@@ -1,5 +1,7 @@
 package xapo.saeed.xapo_test.ui;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 import xapo.saeed.xapo_test.api.response.GitHubRepoResponse;
 
@@ -15,5 +17,8 @@ public interface MainView {
     void showProgressDialog();
 
     void hideProgressDialog();
+
+    @NonNull
+    Context getCurrentContext();
 
 }
