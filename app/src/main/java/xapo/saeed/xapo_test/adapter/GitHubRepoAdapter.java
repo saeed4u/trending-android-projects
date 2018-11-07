@@ -12,37 +12,53 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import xapo.saeed.xapo_test.R;
 import xapo.saeed.xapo_test.adapter.viewholder.GitHubRepoViewHolder;
-import xapo.saeed.xapo_test.api.response.GitHubRepo;
+import xapo.saeed.xapo_test.adapter.viewholder.LoadingDataViewHolder;
 import xapo.saeed.xapo_test.util.ItemAnimation;
 
 /**
  * Created on 06/11/2018.
  */
-public class GitHubRepoAdapter extends RecyclerView.Adapter<GitHubRepoViewHolder> {
+public class GitHubRepoAdapter extends RecyclerView.Adapter {
 
-    private List<GitHubRepo> repos;
+    private List<AdapterData> data;
     private int lastPosition = -1;
     private boolean onAttach = true;
 
-    public GitHubRepoAdapter(List<GitHubRepo> repos) {
-        this.repos = repos;
+    public GitHubRepoAdapter(List<AdapterData> data) {
+        this.data = data;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return data.get(position).getDataType();
     }
 
     @NonNull
     @Override
-    public GitHubRepoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new GitHubRepoViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.repo_item, parent, false));
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        switch (viewType) {
+            case AdapterData.LOADING_DATA:
+                return new LoadingDataViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.loading_data_item, parent, false));
+            default:
+                return new GitHubRepoViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.repo_item, parent, false));
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull GitHubRepoViewHolder holder, int position) {
-        holder.bind(repos.get(position));
-        setAnimation(holder.itemView, position);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        AdapterData adapterData = data.get(position);
+        if (adapterData.getDataType() == AdapterData.REPO_DATA) {
+            if (adapterData.getData() != null) {
+                GitHubRepoViewHolder viewHolder = (GitHubRepoViewHolder) holder;
+                viewHolder.bind(adapterData.getData());
+                setAnimation(holder.itemView, position);
+            }
+        }
     }
 
     @Override
     public int getItemCount() {
-        return repos.size();
+        return data.size();
     }
 
     @Override

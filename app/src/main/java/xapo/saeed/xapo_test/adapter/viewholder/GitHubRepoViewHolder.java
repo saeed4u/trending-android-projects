@@ -44,7 +44,7 @@ public class GitHubRepoViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
     }
 
-    public void bind(GitHubRepo repo) {
+    public void bind(@NonNull GitHubRepo repo) {
         repo_name.setText(repo.getName());
         repo_description.setText(repo.getDescription());
 

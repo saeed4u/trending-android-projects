@@ -1,12 +1,14 @@
 package xapo.saeed.xapo_test.api.response;
 
 import android.os.Parcel;
-import android.os.Parcelable;
+
+import androidx.annotation.Nullable;
+import xapo.saeed.xapo_test.adapter.AdapterData;
 
 /**
  * Created on 06/11/2018.
  */
-public class GitHubRepo implements Parcelable {
+public class GitHubRepo implements AdapterData {
 
     private long id;
     private String node_id;
@@ -186,5 +188,16 @@ public class GitHubRepo implements Parcelable {
         dest.writeFloat(score);
         dest.writeParcelable(owner, flags);
         dest.writeParcelable(license, flags);
+    }
+
+    @Override
+    public int getDataType() {
+        return REPO_DATA;
+    }
+
+    @Nullable
+    @Override
+    public GitHubRepo getData() {
+        return this;
     }
 }
