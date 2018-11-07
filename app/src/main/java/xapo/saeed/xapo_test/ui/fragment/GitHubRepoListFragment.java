@@ -2,20 +2,23 @@ package xapo.saeed.xapo_test.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import xapo.saeed.xapo_test.R;
 import xapo.saeed.xapo_test.adapter.GitHubRepoAdapter;
+import xapo.saeed.xapo_test.api.response.GitHubRepo;
 import xapo.saeed.xapo_test.api.response.GitHubRepoResponse;
 import xapo.saeed.xapo_test.presenter.GitHubRepoPresenter;
 import xapo.saeed.xapo_test.presenter.Presenter;
@@ -31,11 +34,18 @@ public class GitHubRepoListFragment extends BaseFragment implements MainView {
     private static final int PER_PAGE = 10;
     private static final String FETCHED_REPOS = "fetched_repos";
     private static int PAGE = 1;
+    private static final int VISIBLE_TRESHOLD = 1;
+
+    //loading flag
+    private boolean isLoading = false;
+    private int totalItemCount;
+    private int lastVisibleItemPosition;
+    private LinearLayoutManager linearLayoutManager;
 
     @BindView(R.id.android_repos)
     RecyclerView android_repos;
 
-    private GitHubRepoResponse repoResponse;
+    private ArrayList<GitHubRepo> repos;
     private GitHubRepoAdapter repoAdapter;
     private Presenter presenter;
 
@@ -51,27 +61,46 @@ public class GitHubRepoListFragment extends BaseFragment implements MainView {
         View view = inflater.inflate(R.layout.list_fragment, container, false);
         ButterKnife.bind(this, view);
         if (savedInstanceState != null) {
-            repoResponse = savedInstanceState.getParcelable(FETCHED_REPOS);
+            repos = savedInstanceState.getParcelableArrayList(FETCHED_REPOS);
         }
+        linearLayoutManager = (LinearLayoutManager) android_repos.getLayoutManager();
+        android_repos.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                //let's check if it's time to fetch more data
+                totalItemCount = linearLayoutManager.getItemCount();
+                lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
+                if (!isLoading && totalItemCount <= (VISIBLE_TRESHOLD + lastVisibleItemPosition)){
+                    PAGE++;
+                    getAndroidRepos();
+                }
+            }
+        });
         return view;
+    }
+
+    private void getAndroidRepos() {
+        isLoading = true;
+        presenter.getRepo(SORT_BY, ORDER_BY, PER_PAGE, PAGE);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (repoResponse != null && !repoResponse.getItems().isEmpty()) {
-            repoAdapter = new GitHubRepoAdapter(repoResponse.getItems());
-            android_repos.setAdapter(repoAdapter);
-        } else {
-            presenter.getRepo(SORT_BY, ORDER_BY, PER_PAGE, PAGE);
+        if (repos == null || repos.isEmpty()) {
+            repos = new ArrayList<>();
+            getAndroidRepos();
         }
+        repoAdapter = new GitHubRepoAdapter(repos);
+        android_repos.setAdapter(repoAdapter);
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (repoResponse != null) {
-            outState.putParcelable(FETCHED_REPOS, repoResponse);
+        if (repos != null) {
+            outState.putParcelableArrayList(FETCHED_REPOS, repos);
         }
     }
 
@@ -83,9 +112,10 @@ public class GitHubRepoListFragment extends BaseFragment implements MainView {
 
     @Override
     public void onSuccess(@NotNull GitHubRepoResponse repoResponse) {
-        this.repoResponse = repoResponse;
-        repoAdapter = new GitHubRepoAdapter(this.repoResponse.getItems());
-        android_repos.setAdapter(repoAdapter);
+        repos.addAll(repoResponse.getItems());
+        repoAdapter.notifyDataSetChanged();
+        //reset loading flag
+        isLoading = false;
     }
 
     @Override

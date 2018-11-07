@@ -9,7 +9,6 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
-import io.reactivex.processors.PublishProcessor;
 import xapo.saeed.xapo_test.R;
 import xapo.saeed.xapo_test.api.request.GitHubAPI;
 import xapo.saeed.xapo_test.api.request.GitHubAPIAdapter;
@@ -25,7 +24,6 @@ public class GitHubRepoModel implements Model {
 
     private Presenter presenter;
     private Context context;
-    private PublishProcessor<Integer> paginator = PublishProcessor.create();
 
     public GitHubRepoModel(@NonNull Presenter presenter, @NonNull Context context) {
         this.presenter = presenter;
