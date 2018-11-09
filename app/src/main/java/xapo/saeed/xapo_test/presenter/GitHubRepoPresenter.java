@@ -1,41 +1,42 @@
 package xapo.saeed.xapo_test.presenter;
 
-import android.util.Log;
+import java.util.List;
 
 import androidx.annotation.NonNull;
-import xapo.saeed.xapo_test.api.response.GitHubRepoResponse;
-import xapo.saeed.xapo_test.model.GitHubRepoModel;
-import xapo.saeed.xapo_test.model.Model;
-import xapo.saeed.xapo_test.ui.MainView;
+import xapo.saeed.xapo_test.api.response.GitHubRepo;
+import xapo.saeed.xapo_test.model.QueryParam;
+import xapo.saeed.xapo_test.mvp.repo_list.RepoListContract;
 
 /**
  * Created on 06/11/2018.
  */
-public class GitHubRepoPresenter implements Presenter {
+public class GitHubRepoPresenter implements RepoListContract.Presenter {
 
-    private Model model;
-    private MainView view;
+    private RepoListContract.Repo repo;
+    private RepoListContract.View view;
 
-    public GitHubRepoPresenter(@NonNull MainView view) {
+    public GitHubRepoPresenter(@NonNull RepoListContract.View view, @NonNull RepoListContract.Repo repo) {
         this.view = view;
-        this.model = new GitHubRepoModel(this, view.getCurrentContext());
+        this.repo = repo;
     }
 
-    @Override
-    public void getRepo(@NonNull String sort, String orderBy, int perPage, int page) {
-        view.showProgressDialog();
-        model.getAndroidRepo(sort, orderBy, perPage, page);
-    }
+    private RepoListContract.ResponseCallback callback = new RepoListContract.ResponseCallback() {
+        @Override
+        public void success(@NonNull List<GitHubRepo> repoList) {
+            view.hideLoader();
+            view.success(repoList);
+        }
+
+        @Override
+        public void error(Throwable throwable) {
+            view.error(throwable);
+            view.hideLoader();
+        }
+    };
 
     @Override
-    public void onError(Throwable throwable) {
-        view.hideProgressDialog();
-        view.onError(throwable);
-    }
-
-    @Override
-    public void success(@NonNull GitHubRepoResponse response) {
-        view.hideProgressDialog();
-        view.onSuccess(response);
+    public void getRepo(@NonNull QueryParam queryParam) {
+        view.showLoader();
+        repo.getRepo(queryParam, callback);
     }
 }

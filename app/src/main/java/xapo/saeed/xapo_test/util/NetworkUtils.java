@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import androidx.annotation.NonNull;
 import io.reactivex.Observable;
 
 /**
@@ -25,7 +26,7 @@ public class NetworkUtils {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public static Observable<Boolean> networkAvailable(Context context) {
+    public static Observable<Boolean> networkAvailable(@NonNull Context context) {
         return Observable.just(NetworkUtils.isNetworkAvailable(context));
     }
 }

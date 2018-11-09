@@ -1,81 +1,44 @@
 package xapo.saeed.xapo_test.model;
 
-import android.content.Context;
-import android.text.TextUtils;
-
 import androidx.annotation.NonNull;
-import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
-import xapo.saeed.xapo_test.R;
 import xapo.saeed.xapo_test.api.request.GitHubAPI;
 import xapo.saeed.xapo_test.api.request.GitHubAPIAdapter;
 import xapo.saeed.xapo_test.api.response.GitHubRepoResponse;
-import xapo.saeed.xapo_test.presenter.Presenter;
-import xapo.saeed.xapo_test.util.NetworkNotAvailableException;
-import xapo.saeed.xapo_test.util.NetworkUtils;
+import xapo.saeed.xapo_test.mvp.repo_list.RepoListContract;
 
 /**
  * Created on 06/11/2018.
  */
-public class GitHubRepoModel implements Model {
-
-    private Presenter presenter;
-    private Context context;
-
-    public GitHubRepoModel(@NonNull Presenter presenter, @NonNull Context context) {
-        this.presenter = presenter;
-        this.context = context;
-    }
+public class GitHubRepoModel implements RepoListContract.Repo {
 
     @Override
-    public void getAndroidRepo(@NonNull final String sort, String orderBy, int perPage, int page) {
-        if (TextUtils.isEmpty(orderBy)) {
-            orderBy = "desc";
-        }
-
-        if (perPage == 0) {
-            perPage = 10;
-        }
-        if (page == 0){
-            page = 1;
-        }
-        final String finalOrderBy = orderBy;
-        final int finalPerPage = perPage;
-        final int finalPage = page;
-        NetworkUtils.networkAvailable(context)
-                .flatMap(new Function<Boolean, ObservableSource<GitHubRepoResponse>>() {
+    public void getRepo(@NonNull QueryParam queryParam, @NonNull final RepoListContract.ResponseCallback callback) {
+        GitHubAPI api = GitHubAPIAdapter.createGitHubAPIAdapter();
+        api.getTrendingRepos(ANDROID_QUERY_STRING, queryParam.getSortBy(), queryParam.getOrderBy(), queryParam.getPerPage(), queryParam.getPage())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<GitHubRepoResponse>() {
                     @Override
-                    public ObservableSource<GitHubRepoResponse> apply(Boolean aBoolean) throws Exception {
-                        if (!aBoolean) {
-                            throw new NetworkNotAvailableException(context.getString(R.string.error_no_internet));
-                        }
-                        GitHubAPI api = GitHubAPIAdapter.createGitHubAPIAdapter();
-                        return api.getTrendingRepos(ANDROID_QUERY_STRING, sort, finalOrderBy, finalPerPage, finalPage);
+                    public void onSubscribe(Disposable d) {
+
                     }
-                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<GitHubRepoResponse>() {
-            @Override
-            public void onSubscribe(Disposable d) {
 
-            }
+                    @Override
+                    public void onNext(GitHubRepoResponse repoResponse) {
+                        callback.success(repoResponse.getItems());
+                    }
 
-            @Override
-            public void onNext(GitHubRepoResponse repoResponse) {
-                presenter.success(repoResponse);
-            }
+                    @Override
+                    public void onError(Throwable e) {
+                        callback.error(e);
+                    }
 
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-                presenter.onError(e);
-            }
+                    @Override
+                    public void onComplete() {
 
-            @Override
-            public void onComplete() {
-
-            }
-        });
+                    }
+                });
     }
 }

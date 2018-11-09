@@ -15,6 +15,9 @@ public class GitHubRepoResponse implements Parcelable {
 
     private List<GitHubRepo> items;
 
+    public GitHubRepoResponse() {
+    }
+
     protected GitHubRepoResponse(Parcel in) {
         total_count = in.readLong();
         incomplete_results = in.readByte() != 0;

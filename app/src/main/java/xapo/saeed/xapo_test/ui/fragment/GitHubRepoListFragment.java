@@ -1,14 +1,12 @@
 package xapo.saeed.xapo_test.ui.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,23 +17,24 @@ import butterknife.ButterKnife;
 import xapo.saeed.xapo_test.R;
 import xapo.saeed.xapo_test.adapter.AdapterData;
 import xapo.saeed.xapo_test.adapter.GitHubRepoAdapter;
-import xapo.saeed.xapo_test.api.response.GitHubRepoResponse;
+import xapo.saeed.xapo_test.api.response.GitHubRepo;
 import xapo.saeed.xapo_test.api.response.LoadingData;
+import xapo.saeed.xapo_test.model.GitHubRepoModel;
+import xapo.saeed.xapo_test.model.QueryParam;
+import xapo.saeed.xapo_test.mvp.repo_list.RepoListContract;
 import xapo.saeed.xapo_test.presenter.GitHubRepoPresenter;
-import xapo.saeed.xapo_test.presenter.Presenter;
-import xapo.saeed.xapo_test.ui.MainView;
 
 /**
  * Created on 06/11/2018.
  */
-public class GitHubRepoListFragment extends BaseFragment implements MainView {
+public class GitHubRepoListFragment extends BaseFragment implements RepoListContract.View {
 
     private static final String SORT_BY = "stars";
     private static final String ORDER_BY = "desc";
     private static final int PER_PAGE = 10;
     private static final String FETCHED_REPOS = "fetched_repos";
     private static int PAGE = 1;
-    private static final int VISIBLE_TRESHOLD = 1;
+    private static final int VISIBLE_THRESHOLD = 1;
 
     //loading flag
     private boolean isLoading = false;
@@ -48,12 +47,12 @@ public class GitHubRepoListFragment extends BaseFragment implements MainView {
 
     private ArrayList<AdapterData> repos;
     private GitHubRepoAdapter repoAdapter;
-    private Presenter presenter;
+    private RepoListContract.Presenter presenter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new GitHubRepoPresenter(this);
+        presenter = new GitHubRepoPresenter(this, new GitHubRepoModel());
     }
 
     @Nullable
@@ -72,7 +71,7 @@ public class GitHubRepoListFragment extends BaseFragment implements MainView {
                 //let's check if it's time to fetch more data
                 totalItemCount = linearLayoutManager.getItemCount();
                 lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
-                if (!isLoading && totalItemCount <= (VISIBLE_TRESHOLD + lastVisibleItemPosition)) {
+                if (!isLoading && totalItemCount <= (VISIBLE_THRESHOLD + lastVisibleItemPosition)) {
                     PAGE++;
                     isLoading = true;
                     repos.add(new LoadingData());
@@ -84,7 +83,7 @@ public class GitHubRepoListFragment extends BaseFragment implements MainView {
     }
 
     private void getAndroidRepos() {
-        presenter.getRepo(SORT_BY, ORDER_BY, PER_PAGE, PAGE);
+        presenter.getRepo(new QueryParam(SORT_BY, ORDER_BY, PER_PAGE, PAGE));
     }
 
     @Override
@@ -108,13 +107,24 @@ public class GitHubRepoListFragment extends BaseFragment implements MainView {
 
 
     @Override
-    public void onError(Throwable throwable) {
-        handleError(throwable);
+    public void showLoader() {
+        if (!isLoading) {
+            showLoader(R.string.a_moment_please);
+        }
     }
 
     @Override
-    public void onSuccess(@NotNull GitHubRepoResponse repoResponse) {
-        repos.addAll(repoResponse.getItems());
+    public void hideLoader() {
+        if (!isLoading) {
+            dismissDialog();
+        } else {
+            repos.remove(repos.size() - 1);
+        }
+    }
+
+    @Override
+    public void success(@NonNull List<GitHubRepo> repos) {
+        this.repos.addAll(repos);
         repoAdapter.notifyDataSetChanged();
         //reset loading flag
         if (isLoading) {
@@ -123,25 +133,7 @@ public class GitHubRepoListFragment extends BaseFragment implements MainView {
     }
 
     @Override
-    public void showProgressDialog() {
-        if (!isLoading) {
-            showLoader(R.string.a_moment_please);
-        }
-
-    }
-
-    @Override
-    public void hideProgressDialog() {
-        if (!isLoading) {
-            dismissDialog();
-        } else {
-            repos.remove(repos.size() - 1);
-        }
-    }
-
-    @NonNull
-    @Override
-    public Context getCurrentContext() {
-        return activity;
+    public void error(Throwable throwable) {
+        handleError(throwable);
     }
 }
