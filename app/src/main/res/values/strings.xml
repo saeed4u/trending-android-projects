@@ -4,7 +4,7 @@
     <string name="error">Error</string>
     <string name="oops_error_occurred">Sorry we are not able to process your request now, please try again.</string>
     <string name="a_moment_please">A moment please …</string>
-    <string name="treanding_android_repos">Trending Android Repos</string>
+    <string name="trending_android_repos">Trending Android Repos</string>
     <string name="error_no_internet">No Internet connection available</string>
     <string name="no_internet">No Internet</string>
 </resources>

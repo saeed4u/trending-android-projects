@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setTitle(R.string.treanding_android_repos);
+            actionBar.setTitle(R.string.trending_android_repos);
         }
         setUpListFragment();
     }
