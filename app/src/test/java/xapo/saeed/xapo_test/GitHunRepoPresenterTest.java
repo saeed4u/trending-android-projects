@@ -7,7 +7,7 @@ import org.mockito.junit.MockitoRule;
 
 import xapo.saeed.xapo_test.api.request.GitHubAPI;
 import xapo.saeed.xapo_test.mvp.repo_list.RepoListContract;
-import xapo.saeed.xapo_test.presenter.GitHubRepoPresenter;
+import xapo.saeed.xapo_test.mvp.repo_list.GitHubRepoListPresenter;
 
 /**
  * Created on 07/11/2018.
@@ -33,11 +33,11 @@ public class GitHunRepoPresenterTest {
     public MockitoRule rule = MockitoJUnit.rule();
 
 
-    GitHubRepoPresenter presenter;
+    GitHubRepoListPresenter presenter;
 
  /*   @Before
     public void init() {
-        presenter = new GitHubRepoPresenter(view, model);
+        presenter = new GitHubRepoListPresenter(view, model);
         presenter.getRepo(SORT, ORDER_BY, PER_PAGE, PAGE);
     }
 

@@ -1,4 +1,4 @@
-package xapo.saeed.xapo_test.model;
+package xapo.saeed.xapo_test.mvp.repo_list;
 
 import androidx.annotation.NonNull;
 import io.reactivex.Observer;
@@ -7,12 +7,12 @@ import io.reactivex.disposables.Disposable;
 import xapo.saeed.xapo_test.api.request.GitHubAPI;
 import xapo.saeed.xapo_test.api.request.GitHubAPIAdapter;
 import xapo.saeed.xapo_test.api.response.GitHubRepoResponse;
-import xapo.saeed.xapo_test.mvp.repo_list.RepoListContract;
+import xapo.saeed.xapo_test.model.QueryParam;
 
 /**
  * Created on 06/11/2018.
  */
-public class GitHubRepoModel implements RepoListContract.Repo {
+public class GitHubRepoListModel implements RepoListContract.Repo {
 
     @Override
     public void getRepo(@NonNull QueryParam queryParam, @NonNull final RepoListContract.ResponseCallback callback) {
