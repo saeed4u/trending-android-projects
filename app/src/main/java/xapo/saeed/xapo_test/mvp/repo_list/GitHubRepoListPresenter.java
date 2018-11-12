@@ -1,21 +1,20 @@
-package xapo.saeed.xapo_test.presenter;
+package xapo.saeed.xapo_test.mvp.repo_list;
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import xapo.saeed.xapo_test.api.response.GitHubRepo;
 import xapo.saeed.xapo_test.model.QueryParam;
-import xapo.saeed.xapo_test.mvp.repo_list.RepoListContract;
 
 /**
  * Created on 06/11/2018.
  */
-public class GitHubRepoPresenter implements RepoListContract.Presenter {
+public class GitHubRepoListPresenter implements RepoListContract.Presenter {
 
     private RepoListContract.Repo repo;
     private RepoListContract.View view;
 
-    public GitHubRepoPresenter(@NonNull RepoListContract.View view, @NonNull RepoListContract.Repo repo) {
+    public GitHubRepoListPresenter(@NonNull RepoListContract.View view, @NonNull RepoListContract.Repo repo) {
         this.view = view;
         this.repo = repo;
     }

@@ -2,6 +2,8 @@ package xapo.saeed.xapo_test.api.response;
 
 import android.os.Parcel;
 
+import java.util.List;
+
 import androidx.annotation.Nullable;
 import xapo.saeed.xapo_test.adapter.AdapterData;
 
@@ -22,9 +24,15 @@ public class GitHubRepo implements AdapterData {
     private String language;
     private int open_issues;
     private float score;
+    private int watchers_count;
+    private int forks_count;
+
 
     private GitHubRepoOwner owner;
     private GitHubRepoLicense license;
+
+    private List<GitHubRepoOwner> contributors;
+
 
     protected GitHubRepo(Parcel in) {
         id = in.readLong();
@@ -39,8 +47,11 @@ public class GitHubRepo implements AdapterData {
         language = in.readString();
         open_issues = in.readInt();
         score = in.readFloat();
+        watchers_count = in.readInt();
+        forks_count = in.readInt();
         owner = in.readParcelable(GitHubRepoOwner.class.getClassLoader());
         license = in.readParcelable(GitHubRepoLicense.class.getClassLoader());
+        contributors = in.createTypedArrayList(GitHubRepoOwner.CREATOR);
     }
 
     public static final Creator<GitHubRepo> CREATOR = new Creator<GitHubRepo>() {
@@ -167,6 +178,41 @@ public class GitHubRepo implements AdapterData {
         this.license = license;
     }
 
+    public int getWatchers_count() {
+        return watchers_count;
+    }
+
+    public void setWatchers_count(int watchers_count) {
+        this.watchers_count = watchers_count;
+    }
+
+    public int getForks_count() {
+        return forks_count;
+    }
+
+    public void setForks_count(int forks_count) {
+        this.forks_count = forks_count;
+    }
+
+    public List<GitHubRepoOwner> getContributors() {
+        return contributors;
+    }
+
+    public void setContributors(List<GitHubRepoOwner> contributors) {
+        this.contributors = contributors;
+    }
+
+    @Override
+    public int getDataType() {
+        return REPO_DATA;
+    }
+
+    @Nullable
+    @Override
+    public GitHubRepo getData() {
+        return this;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -186,18 +232,9 @@ public class GitHubRepo implements AdapterData {
         dest.writeString(language);
         dest.writeInt(open_issues);
         dest.writeFloat(score);
+        dest.writeInt(watchers_count);
+        dest.writeInt(forks_count);
         dest.writeParcelable(owner, flags);
         dest.writeParcelable(license, flags);
-    }
-
-    @Override
-    public int getDataType() {
-        return REPO_DATA;
-    }
-
-    @Nullable
-    @Override
-    public GitHubRepo getData() {
-        return this;
     }
 }

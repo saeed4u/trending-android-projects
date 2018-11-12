@@ -1,5 +1,6 @@
 package xapo.saeed.xapo_test.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,10 +20,12 @@ import xapo.saeed.xapo_test.adapter.AdapterData;
 import xapo.saeed.xapo_test.adapter.GitHubRepoAdapter;
 import xapo.saeed.xapo_test.api.response.GitHubRepo;
 import xapo.saeed.xapo_test.api.response.LoadingData;
-import xapo.saeed.xapo_test.model.GitHubRepoModel;
+import xapo.saeed.xapo_test.mvp.repo_list.GitHubRepoListPresenter;
+import xapo.saeed.xapo_test.mvp.repo_list.GitHubRepoListModel;
 import xapo.saeed.xapo_test.model.QueryParam;
 import xapo.saeed.xapo_test.mvp.repo_list.RepoListContract;
-import xapo.saeed.xapo_test.presenter.GitHubRepoPresenter;
+import xapo.saeed.xapo_test.ui.RepoDetailActivity;
+import xapo.saeed.xapo_test.util.RecyclerItemClickListener;
 
 /**
  * Created on 06/11/2018.
@@ -52,7 +55,7 @@ public class GitHubRepoListFragment extends BaseFragment implements RepoListCont
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new GitHubRepoPresenter(this, new GitHubRepoModel());
+        presenter = new GitHubRepoListPresenter(this, new GitHubRepoListModel());
     }
 
     @Nullable
@@ -79,6 +82,14 @@ public class GitHubRepoListFragment extends BaseFragment implements RepoListCont
                 }
             }
         });
+        android_repos.addOnItemTouchListener(new RecyclerItemClickListener(activity, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent toDetailActivity = new Intent(activity, RepoDetailActivity.class);
+                toDetailActivity.putExtra(RepoDetailActivity.GITHUB_REPO, repos.get(position).getData());
+                startActivity(toDetailActivity);
+            }
+        }));
         return view;
     }
 
