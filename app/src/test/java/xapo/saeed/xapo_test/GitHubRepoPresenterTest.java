@@ -17,8 +17,8 @@ import java.util.List;
 import xapo.saeed.xapo_test.api.response.GitHubRepo;
 import xapo.saeed.xapo_test.api.response.GitHubRepoResponse;
 import xapo.saeed.xapo_test.model.QueryParam;
+import xapo.saeed.xapo_test.mvp.repo_list.GitHubRepoListPresenter;
 import xapo.saeed.xapo_test.mvp.repo_list.RepoListContract;
-import xapo.saeed.xapo_test.presenter.GitHubRepoPresenter;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -50,7 +50,7 @@ public class GitHubRepoPresenterTest {
 
     @Before
     public void setUp() {
-        presenter = new GitHubRepoPresenter(view, model);
+        presenter = new GitHubRepoListPresenter(view, model);
     }
 
     @Test
